@@ -1,4 +1,4 @@
-package com.reporting.aggregation.dataserver.datamodel;
+package com.reporting.aggregation.dataserver.servers.viewport;
 
 public class DataResponseDataSetSize extends DataResponse {
     private int rowCount;

@@ -1,14 +1,15 @@
 package com.reporting.aggregation.dataserver.mock;
 
-import com.reporting.aggregation.dataserver.datamodel.DataResponseColumnUpdate;
-import com.reporting.aggregation.dataserver.datamodel.IDataChange;
-import com.reporting.aggregation.dataserver.datamodel.StockSymbol;
+import com.reporting.aggregation.dataserver.model.StockSymbol;
+import com.reporting.aggregation.dataserver.servers.viewport.DataResponseColumnUpdate;
+import com.reporting.aggregation.dataserver.servers.viewport.IDataChange;
+
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Queue;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -24,6 +25,9 @@ public class MockDataServer {
     private static TimerTask stockTickTimerTask;
     private static LinkedBlockingQueue<DataResponseColumnUpdate> tickerQueue;
     private static Thread thread;
+    private static HashMap<String, List<StockSymbol>> groupSets;
+    private static HashMap<String, List<String>> groupSetMembers;
+
 
     public MockDataServer() {
         if (MockDataServer.listners == null)
@@ -56,153 +60,103 @@ public class MockDataServer {
             };
             MockDataServer.thread.start();
         }
+        if (MockDataServer.groupSets == null)
+            MockDataServer.groupSets = new HashMap<>();
 
         if (MockDataServer.stockSymbols == null) {
             MockDataServer.stockSymbols = new CopyOnWriteArrayList<>();
-            stockSymbols.add(new StockSymbol("FRD.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD1.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD2.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD3.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD4.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD5.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD6.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD7.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD8.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD9.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD10.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD11.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD12.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD13.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD1.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD2.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD3.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD4.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD5.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD6.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD7.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD8.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD9.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD10.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD11.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD12.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD13.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD1.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD2.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD3.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD4.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD5.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD6.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD7.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD8.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD9.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD10.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD11.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD12.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD13.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD1.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD2.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD3.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD4.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD5.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD6.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD7.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD8.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD9.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD10.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD11.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD12.L", "Fred"));
-         /*   stockSymbols.add(new StockSymbol("FRD13.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD1.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD2.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD3.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD4.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD5.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD6.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD7.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD8.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD9.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD10.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD11.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD12.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD13.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD1.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD2.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD3.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD4.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD5.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD6.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD7.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD8.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD9.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD10.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD11.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD12.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD13.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD1.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD2.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD3.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD4.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD5.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD6.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD7.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD8.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD9.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD10.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD11.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD12.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD13.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD1.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD2.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD3.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD4.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD5.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD6.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD7.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD8.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD9.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD10.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD11.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD12.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD13.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD1.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD2.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD3.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD4.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD5.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD6.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD7.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD8.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD9.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD10.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD11.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD12.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD13.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD1.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD2.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD3.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD4.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD5.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD6.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD7.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD8.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD9.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD10.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD11.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD12.L", "Fred"));
-            stockSymbols.add(new StockSymbol("FRD13.L", "Fred")); */
+
+            addStockSymbol(new StockSymbol("FTSE", "Food", "FRD1.L", "Fred"));
+            addStockSymbol(new StockSymbol("FTSE", "Food", "FRD2.L", "Fred"));
+            addStockSymbol(new StockSymbol("FTSE", "Food", "FRD3.L", "Fred"));
+            addStockSymbol(new StockSymbol("FTSE", "Food", "FRD4.L", "Fred"));
+            addStockSymbol(new StockSymbol("FTSE", "Food", "FRD5.L", "Fred"));
+            addStockSymbol(new StockSymbol("FTSE", "Food", "FRD6.L", "Fred"));
+            addStockSymbol(new StockSymbol("FTSE", "Food", "FRD7.L", "Fred"));
+            addStockSymbol(new StockSymbol("FTSE", "Food", "FRD8.L", "Fred"));
+            addStockSymbol(new StockSymbol("FTSE", "Food", "FRD9.L", "Fred"));
+            addStockSymbol(new StockSymbol("FTSE", "Food", "FRD10.L", "Fred"));
+            addStockSymbol(new StockSymbol("FTSE", "Food", "FRD11.L", "Fred"));
+            addStockSymbol(new StockSymbol("FTSE", "Food", "FRD12.L", "Fred"));
+            addStockSymbol(new StockSymbol("FTSE", "Food", "FRD13.L", "Fred"));
+            addStockSymbol(new StockSymbol("FTSE", "Food", "FRD14.L", "Fred"));
+            addStockSymbol(new StockSymbol("FTSE", "Food", "FRD15.L", "Fred"));
+            addStockSymbol(new StockSymbol("FTSE", "Food", "FRD16.L", "Fred"));
+            addStockSymbol(new StockSymbol("FTSE", "Food", "FRD17.L", "Fred"));
+            addStockSymbol(new StockSymbol("FTSE", "Food", "FRD18.L", "Fred"));
+            addStockSymbol(new StockSymbol("FTSE", "Food", "FRD19.L", "Fred"));
+            addStockSymbol(new StockSymbol("FTSE", "Technology", "JIM2.L", "Jim"));
+            addStockSymbol(new StockSymbol("FTSE", "Technology", "JIM3.L", "Jim"));
+            addStockSymbol(new StockSymbol("FTSE", "Technology", "JIM4.L", "Jim"));
+            addStockSymbol(new StockSymbol("FTSE", "Technology", "JIM5.L", "Jim"));
+            addStockSymbol(new StockSymbol("FTSE", "Technology", "JIM6.L", "Jim"));
+            addStockSymbol(new StockSymbol("FTSE", "Technology", "JIM7.L", "Jim"));
+            addStockSymbol(new StockSymbol("FTSE", "Technology", "JIM8.L", "Jim"));
+            addStockSymbol(new StockSymbol("FTSE", "Technology", "JIM9.L", "Jim"));
+            addStockSymbol(new StockSymbol("FTSE", "Technology", "JIM10.L", "Jim"));
+            addStockSymbol(new StockSymbol("FTSE", "Technology", "JIM11.L", "Jim"));
+            addStockSymbol(new StockSymbol("FTSE", "Technology", "JIM12.L", "Jim"));
+            addStockSymbol(new StockSymbol("FTSE", "Technology", "JIM13.L", "Jim"));
+            addStockSymbol(new StockSymbol("FTSE", "Technology", "JIM14.L", "Jim"));
+            addStockSymbol(new StockSymbol("FTSE", "Technology", "JIM15.L", "Jim"));
+            addStockSymbol(new StockSymbol("FTSE", "Technology", "JIM16.L", "Jim"));
+            addStockSymbol(new StockSymbol("FTSE", "Technology", "JIM17.L", "Jim"));
+            addStockSymbol(new StockSymbol("FTSE", "Technology", "JIM18.L", "Jim"));
+            addStockSymbol(new StockSymbol("FTSE", "Technology", "JIM19.L", "Jim"));
+            addStockSymbol(new StockSymbol("FTSE", "Technology", "JIM20.L", "Jim"));
+            addStockSymbol(new StockSymbol("FTSE", "Technology", "JIM21.L", "Jim"));
+            addStockSymbol(new StockSymbol("FTSE", "Technology", "JIM21.L", "Jim"));
+            addStockSymbol(new StockSymbol("FTSE", "Technology", "JIM23.L", "Jim"));
         }
     }
 
 
+    public void addStockSymbol(StockSymbol ss) {
+        String groupTop = "/";
+        String group1 = groupTop + ss.getExchange();
+        String group2 = group1 + "/" + ss.getSector();
+        List<StockSymbol> ssGroup2List = null;
+
+        if (!MockDataServer.groupSets.containsKey(groupTop)) {
+            StockSymbol ssGroupTop = new StockSymbol(group1, "", "", "");
+            List<StockSymbol> ssGroupTopList = new ArrayList<>();
+            ssGroupTopList.add(ssGroupTop);
+            MockDataServer.groupSets.put(groupTop, ssGroupTopList);
+        }
+
+
+        if (!MockDataServer.groupSets.containsKey(group1)) {
+            StockSymbol ssGroup1 = new StockSymbol(group1, "/" + ss.getSector(), "", "");
+            List<StockSymbol> ssGroup1List = new ArrayList<>();
+            ssGroup1List.add(ssGroup1);
+            MockDataServer.groupSets.put(group1, ssGroup1List);
+        }
+        else {
+            if (!MockDataServer.groupSets.containsKey(group2)) {
+                StockSymbol ssGroup1 = new StockSymbol(group1, "/" + ss.getSector(), "", "");
+                List<StockSymbol> ssGroup1List = MockDataServer.groupSets.get(group1);
+                ssGroup1List.add(ssGroup1);
+            }
+        }
+
+        if (!MockDataServer.groupSets.containsKey(group2)) {
+            ssGroup2List = new ArrayList<>();
+            MockDataServer.groupSets.put(group2, ssGroup2List);
+        }
+        else {
+            ssGroup2List = MockDataServer.groupSets.get(group2);
+        }
+        ssGroup2List.add(ss);
+    }
+
+    public List<StockSymbol> getStockSymbolGrouping(String group) {
+        if (MockDataServer.groupSets.containsKey(group)) {
+            return MockDataServer.groupSets.get(group);
+        }
+        else {
+            return new ArrayList<>();
+        }
+    }
     public void startTicking(long period) {
         if (MockDataServer.stockTickTimerTask == null) {
             MockDataServer.stockTickTimerTask = new TimerTask() {

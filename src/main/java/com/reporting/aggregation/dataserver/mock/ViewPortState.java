@@ -1,8 +1,9 @@
 package com.reporting.aggregation.dataserver.mock;
 
 import com.google.gson.Gson;
-import com.reporting.aggregation.dataserver.datamodel.DataResponseColumnUpdate;
-import com.reporting.aggregation.dataserver.datamodel.IDataChange;
+import com.reporting.aggregation.dataserver.servers.viewport.DataResponseColumnUpdate;
+import com.reporting.aggregation.dataserver.servers.viewport.IDataChange;
+
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -44,9 +45,8 @@ public class ViewPortState implements IDataChange {
     @Override
     public void change(DataResponseColumnUpdate drcu) throws IOException {
         if (isVisible(drcu.getRowIndex())) {
-            if (session.isOpen()) 
+            if (session.isOpen())
                 session.sendMessage(new TextMessage(gson.toJson(drcu)));
         }
     }
-
 }

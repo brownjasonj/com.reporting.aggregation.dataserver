@@ -1,6 +1,7 @@
 package com.reporting.aggregation.dataserver;
 
 import com.reporting.aggregation.dataserver.mock.MockDataServer;
+import com.reporting.aggregation.dataserver.servers.groupby.StockTickerGroupByWebSocketServer;
 import com.reporting.aggregation.dataserver.websockethandlers.StockTicker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -26,6 +27,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(new StockTicker(mockDataServer), "/stockticker").setAllowedOrigins("*");
+        registry.addHandler(new StockTicker(mockDataServer), "/stockticker/viewport").setAllowedOrigins("*");
+        registry.addHandler(new StockTickerGroupByWebSocketServer(mockDataServer), "/stockticker/groupby").setAllowedOrigins("*");
     }
 }

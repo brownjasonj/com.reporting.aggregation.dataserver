@@ -1,4 +1,4 @@
-package com.reporting.aggregation.dataserver.datamodel;
+package com.reporting.aggregation.dataserver.servers.viewport;
 
 import java.util.ArrayList;
 import java.util.List;

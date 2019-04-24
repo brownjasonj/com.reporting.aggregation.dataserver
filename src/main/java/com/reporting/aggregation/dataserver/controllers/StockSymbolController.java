@@ -1,7 +1,8 @@
 package com.reporting.aggregation.dataserver.controllers;
 
-import com.reporting.aggregation.dataserver.datamodel.StockSymbol;
 import com.reporting.aggregation.dataserver.mock.MockDataServer;
+import com.reporting.aggregation.dataserver.model.StockSymbol;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,13 +1,14 @@
 package com.reporting.aggregation.dataserver.websockethandlers;
 
 import com.google.gson.Gson;
-import com.reporting.aggregation.dataserver.datamodel.DataResponseDataSetSize;
-import com.reporting.aggregation.dataserver.datamodel.DataResponseDataSet;
-import com.reporting.aggregation.dataserver.datamodel.DataServerRequest;
-import com.reporting.aggregation.dataserver.datamodel.DataServerRequestWindowChange;
-import com.reporting.aggregation.dataserver.datamodel.StockSymbol;
 import com.reporting.aggregation.dataserver.mock.MockDataServer;
 import com.reporting.aggregation.dataserver.mock.ViewPortState;
+import com.reporting.aggregation.dataserver.model.StockSymbol;
+import com.reporting.aggregation.dataserver.servers.viewport.DataResponseDataSet;
+import com.reporting.aggregation.dataserver.servers.viewport.DataResponseDataSetSize;
+import com.reporting.aggregation.dataserver.servers.viewport.DataServerRequest;
+import com.reporting.aggregation.dataserver.servers.viewport.DataServerRequestWindowChange;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.BinaryMessage;

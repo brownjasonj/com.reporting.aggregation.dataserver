@@ -1,6 +1,4 @@
-package com.reporting.aggregation.dataserver.datamodel;
-
-import java.math.BigInteger;
+package com.reporting.aggregation.dataserver.servers.viewport;
 
 public class DataServerRequest {
     public DataRequestType requestType;

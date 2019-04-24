@@ -1,9 +1,10 @@
-package com.reporting.aggregation.dataserver.datamodel;
+package com.reporting.aggregation.dataserver.servers.viewport;
 
 public enum EDataResponseType {
     DataSetSize("DataSetSize"),
     ColumnUpdate("ColumnUpdate"),
-    DataSet("DataSet");
+    DataSet("DataSet"),
+    DataSetBlock("DataSetBlock");
 
     private String name;
 

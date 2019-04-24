@@ -1,8 +1,8 @@
-package com.reporting.aggregation.dataserver.datamodel;
-
-import java.math.BigInteger;
+package com.reporting.aggregation.dataserver.model;
 
 public class StockSymbol {
+    private String exchange;
+    private String sector;
     private String code;
     private String name;
     private int volume;
@@ -10,7 +10,9 @@ public class StockSymbol {
     private Double bid;
     private Double ask;
 
-    public StockSymbol(String code, String name) {
+    public StockSymbol(String exchange, String sector, String code, String name) {
+        this.exchange = exchange;
+        this.sector = sector;
         this.code = code;
         this.name = name;
         this.volume = 0;
@@ -19,6 +21,14 @@ public class StockSymbol {
         this.ask = 0.0;
     }
 
+    public String getExchange() {
+        return exchange;
+    }
+
+    public String getSector() {
+        return sector;
+    }
+    
     public String getCode() {
         return code;
     }
