@@ -1,6 +1,8 @@
 package com.reporting.aggregation.dataserver.model;
 
-public class StockSymbol {
+import java.io.StringWriter;
+
+public class StockSymbol implements IUrn {
     private String exchange;
     private String sector;
     private String code;
@@ -67,5 +69,17 @@ public class StockSymbol {
 
     public void setAsk(Double ask) {
         this.ask = ask;
+    }
+
+    @Override
+    public String getUrn() {
+        StringWriter sw = new StringWriter();
+        sw.append('/');
+        sw.write(this.exchange);
+        sw.append('/');
+        sw.write(this.sector);
+        sw.append('/');
+        sw.write(this.name);
+        return sw.toString();
     }
 }

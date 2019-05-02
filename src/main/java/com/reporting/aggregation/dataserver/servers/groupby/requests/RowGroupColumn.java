@@ -1,9 +1,10 @@
-package com.reporting.aggregation.dataserver.servers.groupby;
+package com.reporting.aggregation.dataserver.servers.groupby.requests;
 
 public class RowGroupColumn {
     String id;
     String displayName;
     String field;
+    String aggFunc;
 
     public RowGroupColumn() {}
 
@@ -26,5 +27,9 @@ public class RowGroupColumn {
      */
     public String getField() {
         return field;
-    }   
+    }
+
+    public String getAggFunc(){
+        return aggFunc;
+    }
 }

@@ -1,14 +1,7 @@
 package com.reporting.aggregation.dataserver.mock;
 
-import com.reporting.aggregation.dataserver.model.StockSymbol;
-import com.reporting.aggregation.dataserver.servers.viewport.DataResponseColumnUpdate;
-import com.reporting.aggregation.dataserver.servers.viewport.IDataChange;
-
-import org.springframework.stereotype.Component;
-
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.Timer;
@@ -16,6 +9,12 @@ import java.util.TimerTask;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.stream.Collectors;
+
+import com.reporting.aggregation.dataserver.model.StockSymbol;
+import com.reporting.aggregation.dataserver.servers.viewport.DataResponseColumnUpdate;
+import com.reporting.aggregation.dataserver.servers.viewport.IDataChange;
+
+import org.springframework.stereotype.Component;
 
 @Component
 public class MockDataServer {
@@ -25,8 +24,7 @@ public class MockDataServer {
     private static TimerTask stockTickTimerTask;
     private static LinkedBlockingQueue<DataResponseColumnUpdate> tickerQueue;
     private static Thread thread;
-    private static HashMap<String, List<StockSymbol>> groupSets;
-    private static HashMap<String, List<String>> groupSetMembers;
+
 
 
     public MockDataServer() {
@@ -60,8 +58,7 @@ public class MockDataServer {
             };
             MockDataServer.thread.start();
         }
-        if (MockDataServer.groupSets == null)
-            MockDataServer.groupSets = new HashMap<>();
+
 
         if (MockDataServer.stockSymbols == null) {
             MockDataServer.stockSymbols = new CopyOnWriteArrayList<>();
@@ -110,53 +107,11 @@ public class MockDataServer {
         }
     }
 
-
-    public void addStockSymbol(StockSymbol ss) {
-        String groupTop = "/";
-        String group1 = groupTop + ss.getExchange();
-        String group2 = group1 + "/" + ss.getSector();
-        List<StockSymbol> ssGroup2List = null;
-
-        if (!MockDataServer.groupSets.containsKey(groupTop)) {
-            StockSymbol ssGroupTop = new StockSymbol(group1, "", "", "");
-            List<StockSymbol> ssGroupTopList = new ArrayList<>();
-            ssGroupTopList.add(ssGroupTop);
-            MockDataServer.groupSets.put(groupTop, ssGroupTopList);
-        }
-
-
-        if (!MockDataServer.groupSets.containsKey(group1)) {
-            StockSymbol ssGroup1 = new StockSymbol(group1, "/" + ss.getSector(), "", "");
-            List<StockSymbol> ssGroup1List = new ArrayList<>();
-            ssGroup1List.add(ssGroup1);
-            MockDataServer.groupSets.put(group1, ssGroup1List);
-        }
-        else {
-            if (!MockDataServer.groupSets.containsKey(group2)) {
-                StockSymbol ssGroup1 = new StockSymbol(group1, "/" + ss.getSector(), "", "");
-                List<StockSymbol> ssGroup1List = MockDataServer.groupSets.get(group1);
-                ssGroup1List.add(ssGroup1);
-            }
-        }
-
-        if (!MockDataServer.groupSets.containsKey(group2)) {
-            ssGroup2List = new ArrayList<>();
-            MockDataServer.groupSets.put(group2, ssGroup2List);
-        }
-        else {
-            ssGroup2List = MockDataServer.groupSets.get(group2);
-        }
-        ssGroup2List.add(ss);
+    private void addStockSymbol(StockSymbol ss) {
+        MockDataServer.stockSymbols.add(ss);
     }
 
-    public List<StockSymbol> getStockSymbolGrouping(String group) {
-        if (MockDataServer.groupSets.containsKey(group)) {
-            return MockDataServer.groupSets.get(group);
-        }
-        else {
-            return new ArrayList<>();
-        }
-    }
+    
     public void startTicking(long period) {
         if (MockDataServer.stockTickTimerTask == null) {
             MockDataServer.stockTickTimerTask = new TimerTask() {

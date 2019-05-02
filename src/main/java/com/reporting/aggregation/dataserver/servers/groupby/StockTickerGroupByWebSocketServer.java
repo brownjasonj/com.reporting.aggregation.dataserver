@@ -1,51 +1,49 @@
 package com.reporting.aggregation.dataserver.servers.groupby;
 
-import java.io.IOException;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gson.Gson;
-import com.reporting.aggregation.dataserver.mock.MockDataServer;
-import com.reporting.aggregation.dataserver.model.StockSymbol;
+import com.reporting.aggregation.dataserver.model.IRow;
+import com.reporting.aggregation.dataserver.servers.groupby.requests.GroupByRequest;
 import com.reporting.aggregation.dataserver.servers.viewport.DataResponseDataSetBlock;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.web.socket.BinaryMessage;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.AbstractWebSocketHandler;
 
-@Component
 public class StockTickerGroupByWebSocketServer extends AbstractWebSocketHandler {
-    @Autowired
-    MockDataServer mockDataServer;
-
+    protected IGridGroupByDataService groupByDataService;
     protected Gson gson;
-    protected static HashMap<String, DataResponseDataSetBlock<StockSymbol>> groupByStates = null;
+    protected static HashMap<String, GridGroupByState> groupByStates = null;
 
-    @Autowired
-    public StockTickerGroupByWebSocketServer(MockDataServer mockDataServer) {
+    public StockTickerGroupByWebSocketServer(IGridGroupByDataService groupByDataService) {
         super();
         if (StockTickerGroupByWebSocketServer.groupByStates == null) {
             StockTickerGroupByWebSocketServer.groupByStates = new HashMap<>();
         }
-        this.mockDataServer = mockDataServer;
+        this.groupByDataService = groupByDataService;
         this.gson = new Gson();
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         super.afterConnectionClosed(session, status);
+        if (!StockTickerGroupByWebSocketServer.groupByStates.containsKey(session.getId())) {
+            GridGroupByState gbs = StockTickerGroupByWebSocketServer.groupByStates.get(session.getId());
+            StockTickerGroupByWebSocketServer.groupByStates.remove(session.getId());
+        }
     }
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         super.afterConnectionEstablished(session);
         if (!StockTickerGroupByWebSocketServer.groupByStates.containsKey(session.getId())) {
-            StockTickerGroupByWebSocketServer.groupByStates.put(session.getId(), new DataResponseDataSetBlock<>(0,0));
+            GridGroupByState gps = new GridGroupByState(session);
+            StockTickerGroupByWebSocketServer.groupByStates.put(session.getId(), gps);
         }
     }
 
@@ -64,12 +62,13 @@ public class StockTickerGroupByWebSocketServer extends AbstractWebSocketHandler 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         GroupByRequest rbr = this.gson.fromJson(message.getPayload(), GroupByRequest.class);
-        List<StockSymbol> stock = this.mockDataServer.getStockSymbolGrouping(rbr.getGroup());
-        DataResponseDataSetBlock<StockSymbol> drdsb = new DataResponseDataSetBlock<>(rbr.startRow, stock.size());
-        for(int i = rbr.startRow; i < rbr.endRow && i < stock.size(); i++) {
-            drdsb.addElement(stock.get(i));
+        List<IRow> rows = this.groupByDataService.getDataRows(rbr);
+        DataResponseDataSetBlock<Map<String,Object>> drdsb = new DataResponseDataSetBlock<>(rbr.getStartRow(), rows.size());
+        for(int i = rbr.getStartRow(); i < rbr.getEndRow() && i < rows.size(); i++) {
+            drdsb.addElement(rows.get(i).getKvps());
         }
-        session.sendMessage(new TextMessage(this.gson.toJson(drdsb)));
+        String msg = this.gson.toJson(drdsb);
+        session.sendMessage(new TextMessage(msg));
     }
     
 }

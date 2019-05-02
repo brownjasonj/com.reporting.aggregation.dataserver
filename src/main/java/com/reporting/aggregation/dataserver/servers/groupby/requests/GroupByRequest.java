@@ -1,4 +1,4 @@
-package com.reporting.aggregation.dataserver.servers.groupby;
+package com.reporting.aggregation.dataserver.servers.groupby.requests;
 
 public class GroupByRequest {
     int startRow;
