@@ -1,0 +1,32 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: com-reporting-aggregation-dataserver-service
+spec:
+  type: LoadBalancer
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080
+  selector:
+    name: com-reporting-aggregation-dataserver
+---
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: com-reporting-aggregation-dataserver-deployment
+spec:
+  selector:
+    name: com-reporting-aggregation-dataserver
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        name: com-reporting-aggregation-dataserver
+    spec:
+      containers:
+        - name: com-reporting-aggregation-dataserver
+          image: jajabro/com.reporting.aggregation.dataserver:0.4.0
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
