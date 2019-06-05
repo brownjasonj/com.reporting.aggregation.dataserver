@@ -28,7 +28,7 @@ public class DataCache<K,V> implements IDataCache<K,V> {
         this.cacheName = cacheName;
         this.listeners = new LinkedList<>();
         this.ignite = IgniteCacheFactory.getIgnite();
-        this.cache = ignite.cache(cacheName);
+        this.cache = ignite.getOrCreateCache(cacheName);
     }
 
     public void registerListener(IDataCacheListener<K,V> listener) {

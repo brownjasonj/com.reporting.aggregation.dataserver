@@ -36,8 +36,11 @@ public class PricingGroupDataServer implements ICalculationContextListener, IDat
         
         List<String> cacheNames = riskResultIgniteCache.getAvailableCaches(marketEnvId);
      
-        if (!cacheNames.isEmpty())
-            this.riskResultIgniteCache.registerListener(marketEnvId.getId().toString() + "/" + cacheNames.get(0), this);
+        if (!cacheNames.isEmpty()) {
+            String cacheName = marketEnvId.getId().toString() + "/" + cacheNames.get(0);
+            this.riskResultIgniteCache.registerListener(cacheName, this);
+            System.out.println("Listening to Cache: " + cacheName);
+        }
     }
 
     @Override
