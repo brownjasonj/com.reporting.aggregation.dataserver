@@ -2,7 +2,6 @@ package com.reporting.aggregation.dataserver.servers.riskreporting.ignite;
 
 import org.apache.ignite.Ignite;
 import org.apache.ignite.Ignition;
-import org.springframework.stereotype.Component;
 
 public class IgniteCacheFactory {
     protected static Ignite ignite = null;

@@ -17,7 +17,6 @@ import javax.cache.event.CacheEntryUpdatedListener;
 import java.util.UUID;
 
 public class RiskIgniteCacheListener implements Runnable {
-    
     protected Ignite ignite;
     protected UUID marketId;
     protected String Risk;
@@ -67,7 +66,10 @@ public class RiskIgniteCacheListener implements Runnable {
 
 
         qry.setInitialQuery(new ScanQuery<>(new IgniteBiPredicate<UUID, Double>() {
-            @Override public boolean apply(UUID key, Double val) {
+            private static final long serialVersionUID = -7204918844929920193L;
+
+            @Override
+            public boolean apply(UUID key, Double val) {
                 return true;
             }
         }));
@@ -83,6 +85,8 @@ public class RiskIgniteCacheListener implements Runnable {
         // This filter will be evaluated remotely on all nodes.
         // Entry that pass this filter will be sent to the caller.
         qry.setRemoteFilterFactory(new Factory<CacheEntryEventFilter<UUID, Double>>() {
+            private static final long serialVersionUID = 2067567893756427L;
+
             @Override
             public CacheEntryEventFilter<UUID, Double> create() {
                 return new CacheEntryEventFilter<UUID, Double>() {
