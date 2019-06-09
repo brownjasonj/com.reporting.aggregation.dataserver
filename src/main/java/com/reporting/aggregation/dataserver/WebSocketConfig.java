@@ -3,6 +3,7 @@ package com.reporting.aggregation.dataserver;
 import com.reporting.aggregation.dataserver.mock.MockDataServer;
 import com.reporting.aggregation.dataserver.servers.groupby.StockTickerGridGroupByDataService;
 import com.reporting.aggregation.dataserver.servers.groupby.StockTickerGroupByWebSocketServer;
+import com.reporting.aggregation.dataserver.servers.riskreporting.viewports.RiskResultViewPortWebSocketServer;
 import com.reporting.aggregation.dataserver.websockethandlers.StockTicker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -31,5 +32,6 @@ public class WebSocketConfig implements WebSocketConfigurer {
         StockTickerGridGroupByDataService dataService = new StockTickerGridGroupByDataService(mockDataServer);
         registry.addHandler(new StockTicker(mockDataServer), "/stockticker/viewport").setAllowedOrigins("*");
         registry.addHandler(new StockTickerGroupByWebSocketServer(dataService), dataService.getName()).setAllowedOrigins("*");
+        registry.addHandler(new RiskResultViewPortWebSocketServer(), "/riskresults/viewport").setAllowedOrigins("*");
     }
 }

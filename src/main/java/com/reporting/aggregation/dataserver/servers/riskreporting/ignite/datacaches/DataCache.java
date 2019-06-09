@@ -1,5 +1,6 @@
-package com.reporting.aggregation.dataserver.servers.riskreporting.ignite;
+package com.reporting.aggregation.dataserver.servers.riskreporting.ignite.datacaches;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -15,7 +16,6 @@ import org.apache.ignite.IgniteCache;
 import org.apache.ignite.cache.query.ContinuousQuery;
 import org.apache.ignite.cache.query.QueryCursor;
 import org.apache.ignite.cache.query.ScanQuery;
-import org.apache.ignite.lang.IgniteBiPredicate;
 
 public class DataCache<K,V> implements IDataCache<K,V> {
     protected String cacheName;
@@ -29,19 +29,6 @@ public class DataCache<K,V> implements IDataCache<K,V> {
         this.listeners = new LinkedList<>();
         this.ignite = IgniteCacheFactory.getIgnite();
         this.cache = ignite.getOrCreateCache(cacheName);
-    }
-
-    public void registerListener(IDataCacheListener<K,V> listener) {
-        this.listeners.add(listener);
-    }
-
-    public Boolean deregisterListener(IDataCacheListener<K,V> listener) {
-        Boolean listenerExists = this.listeners.contains(listener);
-        if (listenerExists) {
-            this.listeners.remove(listener);
-        }
-
-        return listenerExists;
     }
 
     public void startCacheQuery() {
@@ -86,16 +73,7 @@ public class DataCache<K,V> implements IDataCache<K,V> {
     @Override
     public List<V> getData() {
         List<V> results = new LinkedList<>();
-
-        IgniteBiPredicate<K, V> filter = new IgniteBiPredicate<K, V>() {
-			private static final long serialVersionUID = 1L;
-			@Override
-			public boolean apply(K e1, V e2) {
-				return true;
-            }};
-
-        QueryCursor<Cache.Entry<K, V>> cursor = this.cache.query(new ScanQuery<>(filter));
-
+        QueryCursor<Cache.Entry<K, V>> cursor = this.cache.query(new ScanQuery<>(null));
         for(Cache.Entry<K,V> entry : cursor) {
             results.add(entry.getValue());
         }
@@ -104,6 +82,55 @@ public class DataCache<K,V> implements IDataCache<K,V> {
 
     @Override
     public List<V> getDataWindown(int from, int to) {
-        return null;
+        List<V> results = new LinkedList<>();
+        QueryCursor<Cache.Entry<K, V>> cursor = this.cache.query(new ScanQuery<>(null));
+        for(Cache.Entry<K,V> entry : cursor) {
+            results.add(entry.getValue());
+        }
+        return results;
+    }
+
+    @Override
+    public String getName() {
+        return this.cacheName;
+    }
+
+    @Override
+    public void save(K key, V value) {
+        this.cache.put(key, value);
+    }
+
+    @Override
+    public Boolean containsKey(K key) {
+        return this.cache.containsKey(key);
+    }
+
+    @Override
+    public V getValue(K key) {
+        return this.cache.get(key);
+    }
+
+    @Override
+    public List<K> getKeys() {
+        List<K> results = new ArrayList<>();
+        QueryCursor<Cache.Entry<K, V>> cursor = this.cache.query(new ScanQuery<>(null));
+        for(Cache.Entry<K,V> entry : cursor) {
+            results.add(entry.getKey());
+        }
+        return results;
+    }
+    @Override
+    public void addUpdateListener(IDataCacheListener<K, V> listener) {
+        this.listeners.add(listener);
+    }
+
+    @Override
+    public Boolean removeUpdateListener(IDataCacheListener<K, V> listener) {
+        Boolean listenerExists = this.listeners.contains(listener);
+        if (listenerExists) {
+            this.listeners.remove(listener);
+        }
+
+        return listenerExists;
     }
 }

@@ -1,4 +1,4 @@
-package com.reporting.aggregation.dataserver.servers.riskreporting.ignite;
+package com.reporting.aggregation.dataserver.servers.riskreporting.ignite.datacaches;
 
 import org.apache.ignite.Ignite;
 import org.apache.ignite.Ignition;

@@ -1,6 +1,7 @@
 package com.reporting.aggregation.dataserver.servers.viewport;
 
 public enum DataRequestType {
+    ConnectionParameters("ConnectionParameters"),
     WindowChangeSize("WindowChangeSize"),
     AllData("AllData");
 

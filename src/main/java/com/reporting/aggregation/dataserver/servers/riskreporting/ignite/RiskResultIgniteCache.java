@@ -17,6 +17,10 @@ import org.apache.ignite.cache.query.QueryCursor;
 import org.apache.ignite.cache.query.ScanQuery;
 import org.apache.ignite.lang.IgniteBiPredicate;
 
+import com.reporting.aggregation.dataserver.servers.riskreporting.ignite.datacaches.IDataCache;
+import com.reporting.aggregation.dataserver.servers.riskreporting.ignite.datacaches.DataCache;
+import com.reporting.aggregation.dataserver.servers.riskreporting.ignite.datacaches.IDataCacheListener;
+import com.reporting.aggregation.dataserver.servers.riskreporting.ignite.datacaches.IgniteCacheFactory;
 import com.reporting.mocks.model.RiskResult;
 import com.reporting.mocks.model.id.MarketEnvId;
 
@@ -66,7 +70,7 @@ public class RiskResultIgniteCache {
             dataCaches.put(cacheName, dataCache);
             dataCache.startCacheQuery();
         }
-        dataCache.registerListener(listener);
+        dataCache.addUpdateListener(listener);
         return dataCache;
     }
 }

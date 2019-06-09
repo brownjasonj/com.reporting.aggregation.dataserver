@@ -2,12 +2,13 @@ package com.reporting.aggregation.dataserver.servers.riskreporting;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 import com.google.gson.Gson;
 import com.reporting.aggregation.dataserver.kafka.CalculationContextKafkaConsumer;
 import com.reporting.aggregation.dataserver.kafka.ICalculationContextListener;
-import com.reporting.aggregation.dataserver.servers.riskreporting.ignite.IDataCacheListener;
 import com.reporting.aggregation.dataserver.servers.riskreporting.ignite.RiskResultIgniteCache;
+import com.reporting.aggregation.dataserver.servers.riskreporting.ignite.datacaches.IDataCacheListener;
 import com.reporting.mocks.model.CalculationContext;
 import com.reporting.mocks.model.RiskResult;
 import com.reporting.mocks.model.id.MarketEnvId;
@@ -15,6 +16,8 @@ import com.reporting.mocks.model.risks.Risk;
 import com.reporting.mocks.model.risks.RiskType;
 
 public class PricingGroupDataServer implements ICalculationContextListener, IDataCacheListener<UUID, RiskResult<? extends Risk>> {
+    private final static Logger LOGGER = Logger.getLogger(PricingGroupDataServer.class.getName());
+
     private CalculationContextKafkaConsumer calculationContextKafkaConsumer;
     private RiskResultIgniteCache riskResultIgniteCache;
     private Gson gson;
@@ -37,15 +40,14 @@ public class PricingGroupDataServer implements ICalculationContextListener, IDat
         List<String> cacheNames = riskResultIgniteCache.getAvailableCaches(marketEnvId);
      
         if (!cacheNames.isEmpty()) {
-            String cacheName = marketEnvId.getId().toString() + "/" + cacheNames.get(0);
+            String cacheName = cacheNames.get(0);
             this.riskResultIgniteCache.registerListener(cacheName, this);
-            System.out.println("Listening to Cache: " + cacheName);
+            LOGGER.info("Listening to Cache: " + cacheName);
         }
     }
 
     @Override
     public void update(RiskResult<? extends Risk> updatedValue) {
-        //System.out.println(updatedValue.;
-        System.out.println(this.gson.toJson(updatedValue));
+        LOGGER.info(this.gson.toJson(updatedValue));
     }
 }

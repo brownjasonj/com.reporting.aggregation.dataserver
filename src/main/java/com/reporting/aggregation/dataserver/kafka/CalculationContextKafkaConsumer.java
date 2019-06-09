@@ -3,10 +3,6 @@ package com.reporting.aggregation.dataserver.kafka;
 import com.google.gson.Gson;
 import com.reporting.aggregation.dataserver.ApplicationConfig;
 import com.reporting.mocks.model.CalculationContext;
-import com.reporting.mocks.model.risks.Pv;
-import com.reporting.mocks.model.risks.aggregate.DeltaAggregate;
-import com.reporting.mocks.model.risks.aggregate.PvAggregate;
-import com.reporting.mocks.model.risks.aggregate.RiskAggregate;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -86,7 +82,7 @@ public class CalculationContextKafkaConsumer implements Runnable {
     }
     @Override
     public void run() {
-        System.out.println("DataServer: CalculationContext Kafka Consumer Started");
+        LOGGER.info("DataServer: CalculationContext Kafka Consumer Started");
         consume();
     }
 }
