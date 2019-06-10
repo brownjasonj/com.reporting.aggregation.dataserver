@@ -66,9 +66,13 @@ public class RiskResultViewPortWebSocketServer extends AbstractWebSocketHandler 
                             List<String> caches = new ArrayList<String>(cacheNames);
                             RiskResultDataCache rrdc = new RiskResultDataCache(caches.get(0));
                             DataResponseDataSet<RiskResult<? extends Risk>> rsrds = new DataResponseDataSet<>();
+                            int rowsInResponse = dsrwc.firstRow;
                             for(RiskResult<? extends Risk> rr: rrdc.getData()) {
                                 rsrds.addElement(rr);
+                                rowsInResponse++;
                             }
+                            pgdc.setFirstRow(dsrwc.firstRow);
+                            pgdc.setLastRow(rowsInResponse);
                             session.sendMessage(new TextMessage(gson.toJson(rsrds)));
                         }
                     }
