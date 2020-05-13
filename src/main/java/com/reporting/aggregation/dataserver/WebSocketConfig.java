@@ -1,5 +1,6 @@
 package com.reporting.aggregation.dataserver;
 
+import com.reporting.aggregation.dataserver.kafka.CalculationContextKafkaConsumer;
 import com.reporting.aggregation.dataserver.mock.MockDataServer;
 import com.reporting.aggregation.dataserver.servers.groupby.StockTickerGridGroupByDataService;
 import com.reporting.aggregation.dataserver.servers.groupby.StockTickerGroupByWebSocketServer;
@@ -20,6 +21,9 @@ public class WebSocketConfig implements WebSocketConfigurer {
     @Autowired
     MockDataServer mockDataServer;
 
+    @Autowired
+    CalculationContextKafkaConsumer calculationContextKafkaConsumer;
+
     @Bean
     public ServletServerContainerFactoryBean createWebSocketContainer() {
         ServletServerContainerFactoryBean container = new ServletServerContainerFactoryBean();
@@ -32,6 +36,6 @@ public class WebSocketConfig implements WebSocketConfigurer {
         StockTickerGridGroupByDataService dataService = new StockTickerGridGroupByDataService(mockDataServer);
         registry.addHandler(new StockTicker(mockDataServer), "/stockticker/viewport").setAllowedOrigins("*");
         registry.addHandler(new StockTickerGroupByWebSocketServer(dataService), dataService.getName()).setAllowedOrigins("*");
-        registry.addHandler(new RiskResultViewPortWebSocketServer(), "/riskresults/viewport").setAllowedOrigins("*");
+        registry.addHandler(new RiskResultViewPortWebSocketServer(calculationContextKafkaConsumer), "/riskresults/viewport").setAllowedOrigins("*");
     }
 }
